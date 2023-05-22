@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+
+debian/out/libaapt.so*   usr/lib/${DEB_HOST_MULTIARCH}/android
