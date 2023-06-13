@@ -1,0 +1,4 @@
+hard-code-versions.patch
+aapt_typo.diff
+fix-compile-error.patch
+fix-proto-import-paths.patch

@@ -1,0 +1,8 @@
+*.jar
+data
+docs/downloads
+media/tests
+packages
+services
+tests
+tools/preload

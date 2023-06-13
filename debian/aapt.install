@@ -1,0 +1,2 @@
+debian/out/aapt   usr/lib/android-sdk/build-tools/debian
+debian/out/aapt2  usr/lib/android-sdk/build-tools/debian

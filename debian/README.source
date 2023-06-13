@@ -1,0 +1,59 @@
+The Android source repositories are quite chaotic.  They often include a mix
+of things under arbitrary umbrellas.  For example, there are parts of this
+particular repository that will only ever be built when building the complete
+Android OS (aka "target"), other parts that are only built as part of the SDK
+to support building Android apps (aka "host"), and other parts that are used
+both in the SDK and the Android OS. Most of the source code in this particular
+repostory will never be built or included on Debian because it is only used in
+the Android OS.
+
+It is possible to see which sections will be built for what by looking at the
+Android.mk files.  The parts that are meant for the "host" system, in this
+case Debian, will have lines like this in it:
+
+    include $(BUILD_HOST_EXECUTABLE)
+    include $(BUILD_HOST_JAVA_LIBRARY)
+    include $(BUILD_HOST_SHARED_LIBRARY)
+    include $(BUILD_HOST_STATIC_LIBRARY)
+
+The build targets that are only for Android OS builds instead have this:
+
+    include $(BUILD_EXECUTABLE)
+    include $(BUILD_JAVA_LIBRARY)
+    include $(BUILD_SHARED_LIBRARY)
+    include $(BUILD_STATIC_LIBRARY)
+
+A given chunk of code that is built both for "host" will have both of these
+lines included in the Android.mk file.
+
+
+Structure of the package's git repository
+-----------------------------------------
+
+The source code has been excerpted form the git repository
+ https://android.googlesource.com/platform/frameworks/base
+
+The Android project does not release tarballs of their core software.  Unlike
+the other source packages in android-tools, this package source repo is not
+configured following git-buildpackage's "No upstream tarballs" setup because
+the upstream git repo is so massive, it is basically unmanageable.  It can peg
+your CPU for minutes while checking out a branch or tag.
+
+Instead, the source tarballs are generated from the upstream git repo based on
+the android-* tags.  Use get-orig-source rule in debian/rules to generate
+upstream tarballs.
+
+Omitted files
+-------------
+
+All of the files in the upstream make for an almost 1 GiB tarball.  So
+only the section that are currently used are included in the tarball.
+Check the debian/copyright for details.  There is a bug in tar which
+prevents uscan from doing this automatically, so use `debian/rules
+get-orig-source`
+
+https://bugs.debian.org/831870
+
+
+ -- Hans-Christoph Steiner <hans@eds.org>, Fri, 27 Nov 2020 14:21:10 +0100
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Sat, 28 Nov 2015 16:39:54 +0800

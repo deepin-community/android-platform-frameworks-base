@@ -1,4 +1,64 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+
+export CC=clang
+export CXX=clang++
+
+# https://android.googlesource.com/platform/development/+/android-10.0.0_r36/sdk/build_tools_source.prop_template
+export ANDROID_BUILD_TOOLS_VERSION = 29.0.3
+export DEB_HOST_MULTIARCH
+export DEB_CPPFLAGS_MAINT_APPEND = -DNDEBUG -I/usr/include/android
+export DEB_LDFLAGS_MAINT_APPEND = -fPIC
+
+# https://android.googlesource.com/platform/build/soong/+/refs/tags/android-10.0.0_r36/cc/config/global.go#116
+CPPFLAGS += -DANDROID -fmessage-length=0 -W -Wall -Wno-unused -Winit-self -Wpointer-arith -no-canonical-prefixes -DNDEBUG -UDEBUG -fno-exceptions -Wno-multichar -O2 -fno-strict-aliasing
+export CPPFLAGS
+
+debian/out/aapt: debian/aapt.mk debian/out/libaapt.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/aapt2: debian/aapt2.mk debian/out/libandroidfw.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/libaapt.so: debian/libaapt.mk debian/out/libandroidfw.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/libandroidfw.so: debian/libandroidfw.mk
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/split-select: debian/split-select.mk debian/out/libandroidfw.so debian/out/libaapt.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
 %:
-	dh $@
+	dh $@ --with bash-completion
+
+override_dh_auto_build-arch: debian/out/aapt debian/out/aapt2 debian/out/split-select
+	mkdir --parent debian/out
+	pandoc -s -o debian/out/split-select.1 debian/split-select.1.md
+
+override_dh_auto_build-indep: debian/out/aapt2
+	mkdir --parents debian/out
+	cp /usr/lib/$(DEB_HOST_MULTIARCH)/android/*.so.0 debian/out
+	ln -s /usr/lib/p7zip/7z.so debian/out/7z.so
+	chrpath --replace debian/out debian/out/aapt2
+	debian/out/aapt2 compile --dir core/res/res \
+				-o debian/out/resources.zip
+	debian/out/aapt2 link --manifest core/res/AndroidManifest.xml \
+				debian/out/resources.zip \
+				-o debian/out/framework-res.apk \
+				-A core/res/assets \
+				--min-sdk-version 29 --target-sdk-version 29 \
+				--product default \
+				--version-code 29 --version-name 10.0.0
+	chrpath --replace /usr/lib/$(DEB_HOST_MULTIARCH)/android debian/out/aapt2
+
+get-orig-source: $(subst android-platform-,,$(DEB_SOURCE)).tar.gz
+	mkdir -p $(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM)
+	tar -f $< -x --gzip --directory $(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM)
+	(cd $(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM); tar --create --xz -f ../../$(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM).orig.tar.xz --exclude-from ../debian/orig.excludes --mtime=20121221 *)
+	$(RM) -r $(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM)
+
+$(subst android-platform-,,$(DEB_SOURCE)).tar.gz:
+	wget https://android.googlesource.com/platform/$(subst -,/,$(subst android-platform-,,$(DEB_SOURCE)))/+archive/android-$(subst +,_,$(DEB_VERSION_UPSTREAM)).tar.gz -O $@

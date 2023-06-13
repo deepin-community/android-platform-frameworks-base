@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+
+debian/out/libandroidfw.so usr/lib/${DEB_HOST_MULTIARCH}/android
+libs/androidfw/include/*   usr/include/android
