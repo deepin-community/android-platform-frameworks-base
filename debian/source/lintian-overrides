@@ -1,0 +1,4 @@
+# The upstream repository is supposed to work with the entire AOSP altogether
+# and unfortunately this symlink happens to be cross-repository.
+
+source-contains-unsafe-symlink   native/android/include/android/multinetwork.h

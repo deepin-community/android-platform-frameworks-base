@@ -1,5 +1,408 @@
-template-repository (1.0-1) unstable; urgency=medium
+android-platform-frameworks-base (1:14~beta1-2build3) noble; urgency=medium
 
-  * Initial release
+  * No-change rebuild for CVE-2024-3094
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Sun, 31 Mar 2024 17:37:50 +0000
+
+android-platform-frameworks-base (1:14~beta1-2build2) noble; urgency=high
+
+  * No change rebuild against libprotobuf32t64.
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Fri, 22 Mar 2024 16:28:19 +0100
+
+android-platform-frameworks-base (1:14~beta1-2build1) noble; urgency=medium
+
+  * No-change rebuild against libpng16-16t64
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 29 Feb 2024 06:00:20 +0000
+
+android-platform-frameworks-base (1:14~beta1-2) unstable; urgency=medium
+
+  * Team upload.
+  * Revert "d/include: Add chrono header from libstdc++-13-dev to fix ftbfs
+    for gcc-13".
+  * debian/rules: get-orig-source: Skip creating orig tarball if it is already
+    there.
+
+ -- Roger Shimizu <rosh@debian.org>  Sat, 11 Nov 2023 17:23:03 -0800
+
+android-platform-frameworks-base (1:14~beta1-1) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * debian/control:
+    - Do not use lld for risc64el and remove support for mips.
+
+ -- Roger Shimizu <rosh@debian.org>  Tue, 07 Nov 2023 00:12:27 -0800
+
+android-platform-frameworks-base (1:14~beta1-1~exp2) experimental; urgency=medium
+
+  * Team upload.
+  * debian/control:
+    - Bump up base android lib version.
+    - Add riscv64 support.
+  * debian/rules: Minor update.
+
+ -- Roger Shimizu <rosh@debian.org>  Wed, 09 Aug 2023 00:44:42 -0700
+
+android-platform-frameworks-base (1:14~beta1-1~exp~1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream release 14~beta1
+  * debian/patches: Remove unused patch.
+  * debian/rules: Update version in URL.
+  * debian/*.mk: Move cpp std version to d/rules.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 30 Jul 2023 17:46:55 -0700
+
+android-platform-frameworks-base (1:13.0.0+r66-1) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 30 Jul 2023 00:19:58 -0700
+
+android-platform-frameworks-base (1:13.0.0+r66-1~exp1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream release 13.0.0+r66
+
+ -- Roger Shimizu <rosh@debian.org>  Tue, 25 Jul 2023 01:19:20 -0700
+
+android-platform-frameworks-base (1:13.0.0+r30-1) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * debian/lintian-overrides:
+    - Align for the renamed-tag and use same description.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 23 Jul 2023 14:45:45 -0700
+
+android-platform-frameworks-base (1:13.0.0+r30-1~exp4) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Roger Shimizu ]
+  * debian/include:
+    - Add chrono header from libstdc++-13-dev to fix ftbfs for gcc-13.
+  * debian/patches: Add a missing header to fix ftbfs for gcc-13.
+  * debian/tests/control: Restore test for android-framework-res.
+
+  [ Chirayu Desai ]
+  * Remove myself from Uploaders
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 23 Jul 2023 02:54:59 -0700
+
+android-platform-frameworks-base (1:13.0.0+r30-1~exp3) experimental; urgency=medium
+
+  * Team upload.
+  * debian/aapt2_test.mk: Add -latomic to fix FTBFS on armel/mipsel.
+  * Enable all tests of aapt2_test.
+  * debian/rules: Skip building aapt2_test for mipsel and mips64el.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 26 Mar 2023 21:21:14 -0700
+
+android-platform-frameworks-base (1:13.0.0+r30-1~exp2) experimental; urgency=medium
+
+  * Team upload.
+  * debian/rules: Update SDK version and sync with android-platform-tools
+  * Split debian/aapt2.mk to debian/libaapt2.mk (Closes: #1014831)
+  * Add debian/aapt2_test.mk
+  * Revert "Tentatively disable invoking aapt2".
+
+ -- Roger Shimizu <rosh@debian.org>  Sat, 25 Mar 2023 23:55:31 -0700
+
+android-platform-frameworks-base (1:13.0.0+r30-1~exp1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream version 13.0.0+r30
+  * debian/patches:
+    - Refresh patches.
+    - Add a new patch to make the build working.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 12 Feb 2023 22:10:06 -0800
+
+android-platform-frameworks-base (1:13~beta3-1~exp1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream version: 13~beta3
+  * debian/patches: Refresh patches.
+  * debian/patches: Add patch to fix Protobuf FTBFS (Closes: #1012572).
+  * Update d/*.mk and d/rules
+  * Remove dependency of chrpath
+  * Tentatively disable invoking aapt2
+
+ -- Roger Shimizu <rosh@debian.org>  Mon, 27 Jun 2022 19:54:55 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-10) unstable; urgency=medium
+
+  * debian/patches: Add patch to fix Protobuf FTBFS (Closes: #1012572).
+
+ -- Roger Shimizu <rosh@debian.org>  Fri, 09 Dec 2022 10:59:55 -0600
+
+android-platform-frameworks-base (1:10.0.0+r36-9) unstable; urgency=medium
+
+  * Team upload.
+  * debian/tests/control:
+    - Add test for android-framework-res.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 07 Aug 2022 22:07:57 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-8) unstable; urgency=medium
+
+  * Team upload.
+  * debian/control:
+    - Bump up lib for android-platform-frameworks-native-headers.
+  * debian/*.mk: Add -pie to all executable LDFLAGS.
+
+ -- Roger Shimizu <rosh@debian.org>  Sat, 06 Aug 2022 23:27:36 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-7) unstable; urgency=medium
+
+  * Team upload.
+  * debian/{control,rules}: Sync with debian/exp branch.
+
+ -- Roger Shimizu <rosh@debian.org>  Mon, 01 Aug 2022 01:47:31 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-6) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Roger Shimizu ]
+  * debian/rules: Run aapt2 test on all build arch.
+  * debian/patches: Update fix-compile-error.patch to work with gcc-12
+    (Closes: #1016267).
+  * Add d/*.lintian-overrides to override custom-library-search-path
+    error.
+
+  [ 殷啟聰 | Kai-Chung Yan ]
+  * Remove myself from Uploaders.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 31 Jul 2022 23:08:47 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-5) unstable; urgency=medium
+
+  * Team upload.
+  * debian/control: Bump up package version of Depends.
+
+ -- Roger Shimizu <rosh@debian.org>  Tue, 10 May 2022 00:20:24 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-4) unstable; urgency=medium
+
+  * Team upload.
+  * debian/patches:
+    - Cherry-pick patches from upstream, to work with headers from
+      android-platform-tools v29.
+  * debian/control:
+    - Update the B-D to use new headers from android-platform-tools.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 08 May 2022 17:20:48 +0900
+
+android-platform-frameworks-base (1:10.0.0+r36-3) unstable; urgency=medium
+
+  * Team upload.
+  * Rules-Requires-Root: no
+  * fix build on armel and mipsel
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Tue, 05 Jan 2021 21:06:42 +0100
+
+android-platform-frameworks-base (1:10.0.0+r36-2) unstable; urgency=medium
+
+  * Team upload
+  * Team package, remove myself from Uploaders:
+  * fix autopkgtest
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Sun, 03 Jan 2021 16:43:48 +0100
+
+android-platform-frameworks-base (1:10.0.0+r36-1) unstable; urgency=medium
+
+  [ Hans-Christoph Steiner ]
+  * New upstream version
+  * add debian/upstream/metadata
+
+  [ Roger Shimizu ]
+  * d/watch: Update rule to get new upstream version
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Wed, 25 Nov 2020 12:13:09 +0100
+
+android-platform-frameworks-base (1:8.1.0+r23-3) unstable; urgency=medium
+
+  * Release to unstable
+  * Fix the install path of the headers of libandroidfw
+  * Annotate all packages with Multi-Arch (Closes: #895820)
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Sun, 21 Oct 2018 18:38:43 +0800
+
+android-platform-frameworks-base (1:8.1.0+r23-2) experimental; urgency=medium
+
+  * Properly declare target dependencies in d/rules, thus fixing a FTBFS when
+    building binary-indep.
+  * d/aapt2.mk: Remove macros that don't apply to aapt2
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Wed, 10 Oct 2018 23:04:43 +0800
+
+android-platform-frameworks-base (1:8.1.0+r23-1) experimental; urgency=medium
+
+  * Standards-Version => 4.2.1
+  * Mark the manpage of `split-select` outdated
+
+  [ Hans-Christoph Steiner ]
+  * New upstream release
+  * Do not exclude some test data during get-orig-source
+  * Switch to Salsa
+
+  [ Umang Parmar ]
+  * Switch to aapt2 to compile framework-res.apk
+  * Use debian/clean to simplify build scripts
+  * Add myself to Uploaders
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Tue, 09 Oct 2018 15:24:39 +0800
+
+android-platform-frameworks-base (1:7.0.0+r33-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #859081)
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Mon, 24 Apr 2017 15:53:07 +0200
+
+android-platform-frameworks-base (1:7.0.0+r1-3) unstable; urgency=medium
+
+  * include bash-completion for aapt (Closes: #856420)
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Tue, 28 Feb 2017 22:07:56 +0100
+
+android-platform-frameworks-base (1:7.0.0+r1-2) unstable; urgency=medium
+
+  * Upload to unstable
+  * Switch from using patchelf to chrpath for patchelf is unavailable on MIPS
+  * d/rules: Set ANDROID_BUILD_TOOLS_VERSION since aapt.mk needs it
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Wed, 07 Dec 2016 12:39:23 +0800
+
+android-platform-frameworks-base (1:7.0.0+r1-1) experimental; urgency=medium
+
+  [ Kai-Chung Yan ]
+  * New upstream release
+  * Build aapt2
+  * Enable builds for ARM & MIPS
+  * Remove package: aidl (moved to src:android-platform-system-tools-aidl)
+  * Set the dynamic BUILD_TOOLS_VERSION to "debian"
+  * Update to debhelper 10
+  * Drop fix_expat_header_path.patch: Fixed in upstream
+
+  [ Chirayu Desai ]
+  * No longer manually invoke strip-nondeterminism
+    (See: <https://tracker.debian.org/news/792561>)
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Wed, 05 Oct 2016 17:11:25 +0800
+
+android-platform-frameworks-base (1:6.0.1+r55-1) unstable; urgency=medium
+
+  [ Chirayu Desai ]
+  * New upstream release.
+  * debian: Add watch file for usage with uscan
+  * d/watch: recompress using xz
+  * d/copyright:
+    - Exclude "core/res/res/values-mcc310-mnc380": dpkg-source cannot handle
+      symlinks to a directory
+  * Update Android Build-Depends to the latest version available
+
+  [ Kai-Chung Yan ]
+  * d/copyright: No longer exclude
+    - No longer exclude "*.zip": Not necessary
+    - No longer exclude "packages": Contains codes required for building
+      android.jar
+    - Exclude "core/res/res/values-mcc310-mnc170": dpkg-source cannot handle
+      symlinks to a directory
+
+ -- Chirayu Desai <chirayudesai1@gmail.com>  Sun, 21 Aug 2016 18:38:19 +0530
+
+android-platform-frameworks-base (1:6.0.1+r43-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Kai-Chung Yan ]
+  * New upstream release
+  * d/control:
+    - Limit some BDs to [amd64 i386]
+    - Change Maintainer to "Android Tools Maintainers"
+    - Standards-Version => 3.9.8 (no changes)
+  * Add both paths with/without DEB_HOST_MULTIARCH to RPATH
+  * Drop aapt_Images_cpp_Res_png_9patch.diff: Disable assertions in Images.cpp
+    using -DNDEBUG so that aapt can build APKs successfully
+
+  [ Chirayu Desai ]
+  * New package: android-framework-res for "framework-res.apk"
+
+ -- Chirayu Desai <chirayudesai1@gmail.com>  Tue, 14 Jun 2016 21:41:34 +0530
+
+android-platform-frameworks-base (1:6.0.1+r16-1) unstable; urgency=medium
+
+  * New upstream release
+    - d/rules: Update BUILD_TOOLS_VERSION to 23.0.2
+  * d/copyright: Exclude more useless files to reduce tarball size
+  * Use aapt.bash-completion for installing bash-completion
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Wed, 17 Feb 2016 18:59:36 +0800
+
+android-platform-frameworks-base (1:6.0.0+r26-3) unstable; urgency=medium
+
+  * d/control:
+    - Do not use ${binary:Version} on external packages
+    - Remove libunwind from B-D as unnecessary
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Tue, 09 Feb 2016 02:06:39 +0800
+
+android-platform-frameworks-base (1:6.0.0+r26-2) unstable; urgency=medium
+
+  * d/split-select.1.md: Fix syntax error
+  * d/libandroidfw.mk: Add "-Wl,-rpath=/usr/lib/android" to LDFLAGS
+  * d/copyright: Include more upstream files for building the Android Frameworks
+  * d/control: Add android-libunwind (>= 6) to B-D for solving the build failure
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Sun, 07 Feb 2016 13:25:26 +0800
+
+android-platform-frameworks-base (1:6.0.0+r26-1) experimental; urgency=medium
+
+  * New upstream release
+  * Change version scheme to follow Android release tags
+  * get-orig-source rule in d/rules for generating upstream tarballs
+  * Install executables to faked SDK home
+  * Makefiles independent from Quilt
+  * New package: aidl, split-select, android-libaapt
+  * Use makefiles for generating library symlinks
+  * Add lintian-overrides for binary-or-shlib-defines-rpath
+  * New manpages for aidl, split-select
+  * Update d/copyright
+  * d/control:
+    - Add myself to Uploaders
+    - Change architecture to amd64 & i386
+    - Change priority to optional
+    - Change Build-Depends:
+      - libpng12-dev => libpng-dev
+      - libexpat1-dev => libexpat-dev
+      - Add android-platform-build-headers
+    - All Build-Depends on AOSP packages >= 1:6.0.0
+    - Fix Vcs-Git
+    - Use HTTPS for Vcs URLs
+    - Standards-Version => 3.9.7 (No change)
+  * New patches:
+    - aapt_Images_cpp_Res_png_9patch.diff: Fix API usage mistake
+    - fix_aidl_typo.diff
+    - aapt_typo.diff
+
+ -- Kai-Chung Yan <seamlikok@gmail.com>  Fri, 5 Feb 2016 22:03:11 +0800
+
+android-platform-frameworks-base (21-2) unstable; urgency=low
+
+  * add versions to shlibs so dh can do dep detection
+    (Closes: #768821) (Closes: #769236)
+  * set Android Tools team as Maintainer
+  * fix installation of aapt bash completion rules
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Tue, 02 Dec 2014 14:36:42 +0100
+
+android-platform-frameworks-base (21-1) unstable; urgency=low
+
+  * Initial release (Closes: #763571)
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Tue, 30 Sep 2014 20:55:30 -0400

@@ -1,0 +1,14 @@
+Description: Fix a typo
+Author: Kai-Chung Yan (殷啟聰)
+Last-Update: 2016-01-10
+--- a/tools/aapt/StringPool.cpp
++++ b/tools/aapt/StringPool.cpp
+@@ -40,7 +40,7 @@
+ void printStringPool(const ResStringPool* pool)
+ {
+     if (pool->getError() == NO_INIT) {
+-        printf("String pool is unitialized.\n");
++        printf("String pool is uninitialized.\n");
+         return;
+     } else if (pool->getError() != NO_ERROR) {
+         printf("String pool is corrupt/invalid.\n");
