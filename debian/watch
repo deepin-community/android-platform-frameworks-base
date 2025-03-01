@@ -1,0 +1,8 @@
+# this produces a corrupt tarball, see README.source and get-orig-source
+version=4
+opts="pagemangle=s%\">android-%\.tar\.gz\">android-%g;s%/\+/refs/tags/%/+archive/%g, \
+      oversionmangle=s%_r(\d+|\d+\.\d+|\w)%+r$1%, \
+      repack, compression=xz, \
+      filenamemangle=s%[\w\/\.:]+\+archive\/android-%@PACKAGE@-%" \
+https://android.googlesource.com/platform/frameworks/base/+refs \
+    [\w\/]+\+archive\/android-([0-9\.]+_r\d+|\d+\.\d+|\w)\.tar\.gz

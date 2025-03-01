@@ -1,0 +1,17 @@
+.clang-format*
+.gitignore
+.mailmap
+.prebuilt_info
+*.apk
+*.dex
+*.gz
+*.jar
+*.zip
+data
+docs/downloads
+graphics/jni/fuzz/corpus
+media/tests
+packages
+services
+testdata
+tools/preload

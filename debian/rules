@@ -1,4 +1,125 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+
+export CC = clang
+export CXX = clang++
+
+# https://android.googlesource.com/platform/development/+/refs/tags/android-u-beta-1-gpl/sdk/build_tools_source.prop_template
+export ANDROID_BUILD_TOOLS_VERSION = 33.0.0
+export DEB_HOST_MULTIARCH
+
+VERSION_UPSTREAM=$(DEB_VERSION_UPSTREAM)
+## Only need below if we need to pull an unofficial release version, e.g. from a devel branch
+#VERSION_UPSTREAM=u-beta-1-gpl
+
+## Security Hardening
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all optimize=-lto
+# https://android.googlesource.com/platform/build/soong/+/refs/tags/android-u-beta-1-gpl/cc/config/global.go#307
+export DEB_CFLAGS_MAINT_APPEND = -fPIC -std=gnu17 -gdwarf-4
+export DEB_CXXFLAGS_MAINT_APPEND = -fPIC -std=gnu++2a -gdwarf-4
+export DEB_LDFLAGS_MAINT_APPEND = -fPIC
+export DEB_CPPFLAGS_MAINT_APPEND = -DNDEBUG -UDEBUG \
+  -I/usr/include/android \
+  -Wno-c99-designator \
+  -Wno-gnu-designator \
+  -Wno-gnu-folding-constant \
+  -fmessage-length=0 \
+  -fno-exceptions \
+  -fno-strict-aliasing \
+  -no-canonical-prefixes \
+
+ifneq (, $(shell which lld))
+  export DEB_LDFLAGS_MAINT_APPEND += -fuse-ld=lld -Wl,--build-id=sha1
+endif
+
+ifeq ($(IMPORT_VER),)
+	GBP_IMPORT = --uscan
+else ifneq ("$(wildcard ../$(DEB_SOURCE)_$(IMPORT_VER).tar.gz)","")
+	GBP_IMPORT = ../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar.xz
+else
+	GBP_IMPORT =
+endif
+
+debian/out/aapt: debian/aapt.mk debian/out/libaapt.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/aapt2: debian/aapt2.mk debian/out/libaapt2.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/lib%.so: debian/lib%.mk debian/out/libandroidfw.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/split-select: debian/split-select.mk debian/out/libandroidfw.so debian/out/libaapt.so
+	dh_auto_build --buildsystem=makefile -- -f $<
+
+debian/out/%_test: debian/%_test.mk debian/out/libaapt2.so
+	dh_auto_build --buildsystem=makefile -- --file=$<
+
 %:
-	dh $@
+	dh $@ --with bash-completion
+
+override_dh_auto_configure:
+	mkdir -p debian/out
+	rm -f tools/aapt2/integration-tests/ConvertTest/duplicate_entries.apk
+	dh_auto_configure
+
+override_dh_auto_build-arch: debian/out/aapt debian/out/aapt2 debian/out/split-select
+	pandoc -s -o debian/out/split-select.1 debian/split-select.1.md
+
+override_dh_auto_build-indep: debian/out/aapt2
+	LD_LIBRARY_PATH=debian/out \
+	debian/out/aapt2 compile --dir core/res/res \
+				-o debian/out/resources.zip
+	LD_LIBRARY_PATH=debian/out \
+	debian/out/aapt2 link --manifest core/res/AndroidManifest.xml \
+				debian/out/resources.zip \
+				-o debian/out/framework-res.apk \
+				-A core/res/assets \
+				--min-sdk-version 33 --target-sdk-version 33 \
+				--product default \
+				--version-code 33 --version-name 13.0.0
+
+# Depends: git-buildpackage
+get-orig-source:
+ifneq ($(GBP_IMPORT),--uscan)
+ifeq ("$(wildcard ../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar.xz)","")
+	mkdir -p $(DEB_SOURCE)_$(IMPORT_VER)
+	tar xfz ../$(DEB_SOURCE)_$(IMPORT_VER).tar.gz -C $(DEB_SOURCE)_$(IMPORT_VER)
+	(cd $(DEB_SOURCE)_$(IMPORT_VER); tar cf ../../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar --exclude-from ../debian/orig.excludes .)
+	rm -r $(DEB_SOURCE)_$(IMPORT_VER)
+	mkdir -p $(DEB_SOURCE)_$(IMPORT_VER)
+	tar xf ../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar -C $(DEB_SOURCE)_$(IMPORT_VER)
+	find $(DEB_SOURCE)_$(IMPORT_VER) -type d -empty -delete
+	rm ../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar
+	(cd $(DEB_SOURCE)_$(IMPORT_VER); tar cf ../../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar --mtime=20100517 .)
+	xz -9 < ../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar > $(GBP_IMPORT)
+	rm -r $(DEB_SOURCE)_$(IMPORT_VER) ../$(DEB_SOURCE)_$(IMPORT_VER).orig.tar
+endif
+endif
+	gbp import-orig $(GBP_IMPORT) \
+		--no-interactive --debian-branch=$(shell git symbolic-ref --short HEAD) \
+		--postimport="\
+		dch -b -v\$$GBP_DEBIAN_VERSION \"New upstream release \$$GBP_UPSTREAM_VERSION\"; \
+		git add debian/changelog; \
+		git commit -m\"dch: Note new upstream version \$$GBP_UPSTREAM_VERSION\""
+check-upstream:
+	$(eval count = $$(shell git show upstream|wc -l))
+	@test $(count) -gt 10 || ( \
+		git reset --hard HEAD^^; \
+		git tag -d upstream/$(shell echo $(DEB_VERSION_UPSTREAM)|sed "s/~/_/g;s/:/%/g"); \
+		git checkout upstream; git reset --hard HEAD^; git checkout $(shell git symbolic-ref --short HEAD); \
+		echo; \
+		echo error: Line count of upstream/$(DEB_VERSION_UPSTREAM): $(count); \
+		echo Upstream changes does not deserve an update.;\
+		echo; \
+		exit 1; \
+	)
+ifeq ($(GBP_IMPORT),)
+update:
+	@echo Cannot find orig to import: ../$(DEB_SOURCE)_$(IMPORT_VER).tar.gz
+else
+update: get-orig-source check-upstream
+	@echo Package updated to upstream version: $(shell dpkg-parsechangelog -SVersion|sed 's/-[^-]*$$//'|sed 's/^[0-9]*://')
+endif

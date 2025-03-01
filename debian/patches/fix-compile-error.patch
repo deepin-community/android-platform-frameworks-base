@@ -1,0 +1,35 @@
+Description: fix std::vector must have a non-const, non-volatile value_type
+Forwarded: not-needed
+--- a/libs/androidfw/include/androidfw/LoadedArsc.h
++++ b/libs/androidfw/include/androidfw/LoadedArsc.h
+@@ -295,7 +295,7 @@
+   std::unordered_map<uint8_t, TypeSpec> type_specs_;
+   ByteBucketArray<uint32_t> resource_ids_;
+   std::vector<DynamicPackageEntry> dynamic_package_map_;
+-  std::vector<const std::pair<OverlayableInfo, std::unordered_set<uint32_t>>> overlayable_infos_;
++  std::vector<std::pair<OverlayableInfo, std::unordered_set<uint32_t>>> overlayable_infos_;
+   std::map<uint32_t, uint32_t> alias_id_map_;
+ 
+   // A map of overlayable name to actor
+--- a/tools/aapt2/util/Files.cpp
++++ b/tools/aapt2/util/Files.cpp
+@@ -189,7 +189,7 @@
+   base->append(part.data(), part.size());
+ }
+ 
+-std::string BuildPath(std::vector<const StringPiece>&& args) {
++std::string BuildPath(std::vector<StringPiece>&& args) {
+   if (args.empty()) {
+     return "";
+   }
+--- a/tools/aapt2/util/Files.h
++++ b/tools/aapt2/util/Files.h
+@@ -59,7 +59,7 @@
+ void AppendPath(std::string* base, android::StringPiece part);
+ 
+ // Concatenates the list of paths and separates each part with the directory separator.
+-std::string BuildPath(std::vector<const android::StringPiece>&& args);
++std::string BuildPath(std::vector<android::StringPiece>&& args);
+ 
+ // Makes all the directories in `path`. The last element in the path is interpreted as a directory.
+ bool mkdirs(const std::string& path);

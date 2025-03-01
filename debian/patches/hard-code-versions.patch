@@ -1,0 +1,48 @@
+--- a/tools/aapt/Main.cpp
++++ b/tools/aapt/Main.cpp
+@@ -6,7 +6,6 @@
+ #include "Main.h"
+ #include "Bundle.h"
+ 
+-#include <build/version.h>
+ #include <utils/Compat.h>
+ #include <utils/Log.h>
+ #include <utils/threads.h>
+@@ -29,7 +28,7 @@
+     if (bundle->getFileSpecCount() != 0) {
+         printf("(ignoring extra arguments)\n");
+     }
+-    printf("Android Asset Packaging Tool, v0.2-%s\n", android::build::GetBuildNumber().c_str());
++    printf("Android Asset Packaging Tool, v0.2-%s\n", "debian");
+ 
+     return 0;
+ }
+--- a/tools/aapt2/util/Util.cpp
++++ b/tools/aapt2/util/Util.cpp
+@@ -24,7 +24,6 @@
+ #include "android-base/stringprintf.h"
+ #include "android-base/strings.h"
+ #include "androidfw/StringPiece.h"
+-#include "build/version.h"
+ #include "text/Unicode.h"
+ #include "text/Utf8Iterator.h"
+ #include "util/BigBuffer.h"
+@@ -230,17 +229,7 @@ std::string GetToolFingerprint() {
+   // Update minor version whenever a feature or flag is added.
+   static const char* const sMinorVersion = "19";
+ 
+-  // The build id of aapt2 binary.
+-  static std::string sBuildId = android::build::GetBuildNumber();
+-
+-  if (android::base::StartsWith(sBuildId, "eng.")) {
+-    time_t now = time(0);
+-    tm* ltm = localtime(&now);
+-
+-    sBuildId = android::base::StringPrintf("eng.%d%d", 1900 + ltm->tm_year, 1 + ltm->tm_mon);
+-  }
+-
+-  return android::base::StringPrintf("%s.%s-%s", sMajorVersion, sMinorVersion, sBuildId.c_str());
++  return android::base::StringPrintf("%s.%s-%s", sMajorVersion, sMinorVersion, "debian");
+ }
+ 
+ static size_t ConsumeDigits(const char* start, const char* end) {

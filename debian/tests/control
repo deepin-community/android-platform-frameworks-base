@@ -1,0 +1,19 @@
+Test-Command: aapt version
+Architecture: amd64 i386 armel armhf arm64 mipsel mips64el riscv64
+Depends: aapt
+
+Test-Command: aapt2 version
+Architecture: amd64 i386 armel armhf arm64 mipsel mips64el riscv64
+Depends: aapt
+Restrictions: allow-stderr
+
+Test-Command: for i in strings badging permissions resources configurations; do aapt dump $i /usr/share/android-framework-res/framework-res.apk > /dev/null; done
+Architecture: amd64 i386 armel armhf arm64 mipsel mips64el riscv64
+Depends: aapt, android-framework-res
+
+Test-Command: for i in badging configurations packagename permissions strings resources overlayable; do aapt2 dump $i /usr/share/android-framework-res/framework-res.apk > /dev/null; done
+Architecture: amd64 i386 armel armhf arm64 mipsel mips64el riscv64
+Depends: aapt, android-framework-res
+
+Test-Command: ls -l /usr/share/android-framework-res/framework-res.apk
+Depends: android-framework-res
